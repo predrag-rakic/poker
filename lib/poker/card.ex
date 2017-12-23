@@ -38,6 +38,8 @@ defmodule Poker.Card do
     Map.get(card, :__struct__) == Poker.Card
   def is_card(_card), do: false
 
+  def suit(%__MODULE__{} = card), do: card.suit
+
   defp order(%__MODULE__{} = card), do:
     @valid_values |> Enum.find_index(fn(value) -> value == card.value end)
 

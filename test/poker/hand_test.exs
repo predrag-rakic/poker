@@ -39,4 +39,14 @@ defmodule Poker.HandTest do
     assert sorted_hand          == Hand.sort(hand)
   end
 
+  test "same suit? - true" do
+    assert {:ok, hand} = Hand.new("JH 4H AH 8H 2H")
+    assert Hand.same_suit?(hand)
+  end
+
+  test "same suit? - false" do
+    assert {:ok, hand} = Hand.new("JS 4H AH 8H 2H")
+    refute Hand.same_suit?(hand)
+  end
+
 end

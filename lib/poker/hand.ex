@@ -54,6 +54,14 @@ defmodule Poker.Hand do
     |> create_hand!()
   end
 
+  @doc """
+  Checkis if all cards in hand are of the same suit
+  """
+  def same_suit?(%__MODULE__{} = hand) do
+    suit = hand.cards |> hd() |> Card.suit()
+    hand.cards |> tl() |> Enum.all?(fn(card) -> Card.suit(card) == suit end)
+  end
+
   defp create_hand!(cards), do: struct!(__MODULE__, cards: cards)
 
   defp validate_cards(cards), do:

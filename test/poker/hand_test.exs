@@ -49,4 +49,14 @@ defmodule Poker.HandTest do
     refute Hand.same_suit?(hand)
   end
 
+  test "consequtive values" do
+    assert {:ok, hand} = Hand.new("5C 6D 7H 8S 9H")
+    assert Hand.consequtive_values?(hand)
+    assert {:ok, hand} = Hand.new("9S 6H 7H 8C 5D")
+    assert Hand.consequtive_values?(hand)
+    assert {:ok, hand} = Hand.new("9S 6C 7H 8S TH")
+    assert Hand.consequtive_values?(hand)
+    assert {:ok, hand} = Hand.new("9S JC 7H 8S TH")
+    assert Hand.consequtive_values?(hand)
+  end
 end

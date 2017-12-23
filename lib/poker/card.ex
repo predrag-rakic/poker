@@ -40,7 +40,7 @@ defmodule Poker.Card do
 
   def suit(%__MODULE__{} = card), do: card.suit
 
-  defp order(%__MODULE__{} = card), do:
+  def order(%__MODULE__{} = card), do:
     @valid_values |> Enum.find_index(fn(value) -> value == card.value end)
 
   defp validate_value(value)  when value in @valid_values, do: {:ok, value}

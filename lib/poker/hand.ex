@@ -11,14 +11,39 @@ defmodule Poker.Hand do
   @doc """
   Create new hand
 
-      iex> {:ok, c} = Card.new("2S")
-      iex> Hand.new([c, c, c, c, c])
-      %Poker.Hand{c, c, c, c, c}
+      iex> new("2S 2S 2S 2S 2S")
+      {:ok,
+            %Poker.Hand{cards: [%Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"}]}}
+  """
+  def new(cards) when is_binary(cards) do
+    cards
+    |> String.split()
+    |> Enum.map(fn(c) -> Card.new(c) |> elem(1) end)
+    |> new()
+  end
+
+  @doc """
+  Create new hand
+
+      iex> {:ok, c} = Poker.Card.new("2S")
+      iex> new([c, c, c, c, c])
+      {:ok,
+            %Poker.Hand{cards: [%Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"},
+              %Poker.Card{suit: "S", value: "2"}]}}
   """
   def new(cards) when is_list(cards) and length(cards) == 5 do
     with  {:ok, _} <- validate_cards(cards),
     do: {:ok, create_hand!(cards)}
   end
+
+  def new(cards), do: {:error, {:malformed_request, cards}}
 
   @doc """
   Return new Hand with cards sorted

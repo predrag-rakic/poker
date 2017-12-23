@@ -1,6 +1,6 @@
 defmodule Poker.HandTest do
   use ExUnit.Case
-  doctest Poker.Card
+  doctest Poker.Hand, import: true
 
   alias Poker.{Card, Hand}
 
@@ -8,28 +8,35 @@ defmodule Poker.HandTest do
     struct(Hand)
   end
 
-  test "create hand - valid" do
+  test "create hand, string - success" do
+    hand =
+      ~w(5H JH 7S AC 9H)
+      |> Enum.map(fn(c) -> {:ok, card} = Card.new(c); card end)
+      |> Hand.new()
+    assert hand == Hand.new("5H JH 7S AC 9H")
+  end
+
+  test "create hand, string - failure" do
+    assert {:error, {:malformed_request, _}} = Hand.new("5H JH 7S AC 9H 2S")
+    assert {:error, {:malformed_request, _}} = Hand.new("5H JH 7S AC ")
+    assert {:error, _} = Hand.new("5H JH 7S AC 9h")
+  end
+
+  test "create hand, cards - success" do
     {:ok, c} = Card.new("2S")
     assert {:ok, hand} = Hand.new([c, c, c, c, c])
     assert %Hand{} = hand
   end
 
-  test "create hand - invalid" do
+  test "create hand, cards - invalid" do
     {:ok, c} = Card.new("2S")
     assert {:error, {:invalid, _}} = Hand.new([c, c, c, c, "2S"])
   end
 
   test "sort cards" do
-    {:ok, jack} = Card.new("JH")
-    {:ok, four} = Card.new("4S")
-    {:ok, ace} = Card.new("AS")
-    {:ok, eight} = Card.new("8C")
-    {:ok, two} = Card.new("2D")
-    {:ok, hand} = Hand.new([jack, four, ace, eight, two])
-    {:ok, sorted_hand} = Hand.new([two, four, eight, jack, ace])
-    assert sorted_hand = Hand.sort(hand)
+    assert {:ok, hand}          =  Hand.new("JH 4S AS 8C 2D")
+    assert {:ok, sorted_hand}   =  Hand.new("2D 4S 8C JH AS")
+    assert sorted_hand          == Hand.sort(hand)
   end
-
-  defp card(str), do: Card.new(str) |> elem(1)
 
 end

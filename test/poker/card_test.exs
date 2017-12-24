@@ -24,6 +24,13 @@ defmodule Poker.CardTest do
     assert {:error, {:invalid_suit, _}} = Card.new("2G")
   end
 
+  test "sort" do
+    assert {:ok, c1} = Card.new("KS")
+    assert {:ok, c2} = Card.new("TS")
+    assert {:ok, c3} = Card.new("2S")
+    assert [c3, c2, c1] == Card.sort([c1, c2, c3])
+  end
+
   test "comparison - wrong type" do
     {:ok, l} = Card.new("2S")
     assert_raise(FunctionClauseError, fn -> Card.less_than_equal(l, "2S") end)

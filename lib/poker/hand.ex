@@ -48,11 +48,8 @@ defmodule Poker.Hand do
   @doc """
   Return new Hand with cards sorted
   """
-  def sort(%__MODULE__{} = hand) do
-    hand.cards
-    |> Enum.sort(&Card.less_than_equal/2)
-    |> create_hand!()
-  end
+  def sort(%__MODULE__{} = hand), do:
+    hand.cards |> Card.sort() |> create_hand!()
 
   @doc """
   Checkis if all cards in hand are of the same suit

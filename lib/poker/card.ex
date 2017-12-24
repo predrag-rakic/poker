@@ -22,6 +22,9 @@ defmodule Poker.Card do
   end
   def new(input), do: {:error, {:invalid_format, input}}
 
+  def sort(cards) when is_list(cards), do:
+    cards |> Enum.sort(&less_than_equal/2)
+
   @doc """
   Compare two cards.
 

@@ -59,4 +59,10 @@ defmodule Poker.HandTest do
     assert {:ok, hand} = Hand.new("9S JC 7H 8S TH")
     assert Hand.consequtive_values?(hand)
   end
+
+  test "highest card" do
+    assert {:ok, hand} = Hand.new("AC 2D 3H 4C 5S")
+    assert {:ok, expected} = Card.new("AC")
+    assert Hand.highest_card(hand) == expected
+  end
 end

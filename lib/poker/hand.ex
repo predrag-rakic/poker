@@ -70,6 +70,10 @@ defmodule Poker.Hand do
 
   def cards(%__MODULE__{} = hand), do: hand.cards
 
+  def highest_card(%__MODULE__{} = hand) do
+    hand |> sort() |> cards() |> List.last()
+  end
+
   defp consequtive_values(hand), do:
     hand
     |> sort()

@@ -20,6 +20,12 @@ defmodule Poker.CLITest do
       "Malformed input: 'foo bar'; message: [\"foo bar\"]"
   end
 
+  test "print_judgement - cheating" do
+    assert CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C 2H") ==
+      "Malformed input: 'Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C 2H'; " <>
+      "message: {:error, \"Same card(s) appeared more than once? You are cheating!\"}"
+  end
+
   test "print_judgement - white, high card: ace" do
     assert CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH") ==
       "White wins - high card: Ace"

@@ -12,6 +12,7 @@ defmodule Poker.CLI do
     with  [black_input, white_input] <- split(input),
           {:ok, black} <- Category.new(black_input),
           {:ok, white} <- Category.new(white_input),
+          {:ok, _} <- validate_cards(black.hand.cards, white.hand.cards),
           %Rank{} = rank <- Rank.compare(black, white)
     do
       rank
@@ -38,4 +39,11 @@ defmodule Poker.CLI do
 
   defp card_value(nil), do: ""
   defp card_value(%Card{} = card), do: ": #{card}"
+
+  defp validate_cards(l, r), do:
+    (l ++ r) |> Enum.uniq() |> length() |> validate_cards_()
+
+  defp validate_cards_(_card_count = 10), do: {:ok, ""}
+  defp validate_cards_(_card_count),      do:
+    {:error, "Same card(s) appeared more than once? You are cheating!"}
 end

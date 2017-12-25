@@ -2,7 +2,7 @@ defmodule Poker.RankTest do
   use ExUnit.Case
   doctest Poker.Card
 
-  alias Poker.{Card, Hand, Rank, Category}
+  alias Poker.{Card, Rank, Category}
 
   test "compare - high card - tie" do
     assert {:ok, left}  = Category.new("5H JH 7S AC 9H")
@@ -123,6 +123,4 @@ defmodule Poker.RankTest do
     assert {:ok, card}  = Card.new("7H")
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "T", card: card}
   end
-
-  defp strait_flush, do: Hand.new("5H 4H 7H 6H 8H")
 end

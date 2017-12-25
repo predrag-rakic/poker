@@ -73,9 +73,9 @@ defmodule Poker.Rank do
   end
 
   defp compare_card_lists(lcards, rcards) do
-    {lcards, rcards} |> IO.inspect
-    lcards_order = lcards |> Enum.map(&Card.order/1) |> IO.inspect
-    rcards_order = rcards |> Enum.map(&Card.order/1) |> IO.inspect
+    {lcards, rcards}
+    lcards_order = lcards |> Enum.map(&Card.order/1)
+    rcards_order = rcards |> Enum.map(&Card.order/1)
     cond do
       lcards_order > rcards_order ->
         {1, card_diff(lcards, rcards, :left)}
@@ -89,6 +89,6 @@ defmodule Poker.Rank do
     |> Enum.find(fn({l, r}) -> Card.order(l) != Card.order(r) end)
     |> card(select)
 
-  defp card({l, r}, :left),  do: l
-  defp card({l, r}, :right), do: r
+  defp card({l, _r}, :left),  do: l
+  defp card({_l, r}, :right), do: r
 end

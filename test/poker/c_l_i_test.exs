@@ -11,7 +11,7 @@ defmodule Poker.CLITest do
 
   test "judge" do
     assert {:ok, card}  = Card.new("AH")
-    assert %Rank{winner: -1, category: "C", card: ^card} =
+    assert %Rank{winner: :right, category: "C", card: ^card} =
               CLI.judge("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH")
   end
 

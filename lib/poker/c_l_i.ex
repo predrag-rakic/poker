@@ -23,10 +23,10 @@ defmodule Poker.CLI do
     |> Enum.map(&String.trim/1)
   end
 
-  defp output(%Rank{winner: 0}), do: "Tie"
-  defp output(%Rank{winner: 1, category: category, card: card}), do:
+  defp output(%Rank{winner: :tie}), do: "Tie"
+  defp output(%Rank{winner: :left, category: category, card: card}), do:
     "Black wins - " <> result(category, card)
-  defp output(%Rank{winner: -1, category: category, card: card}), do:
+  defp output(%Rank{winner: :right, category: category, card: card}), do:
     "White wins - " <> result(category, card)
 
   defp result(category, card), do:

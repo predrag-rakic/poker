@@ -12,10 +12,7 @@ defmodule Poker.Rank do
   @doc """
   Compares two categories.
 
-  Returns:
-    1 if left is higher
-    -1 if right is higher
-    0 if they are equal
+  Winner contains:  :left, :right or :tie
   """
   def compare(%Category{} = l, %Category{} = r), do:
     compare_(l.category, r.category, l, r)
@@ -25,9 +22,9 @@ defmodule Poker.Rank do
 
   def compare_(lcat, rcat, l, r) when lcat != rcat do
     if Category.less_than(l, r) do
-      different_category(-1, r.category)
+      different_category(:right, r.category)
     else
-      different_category(1, l.category)
+      different_category(:left, l.category)
     end
   end
 
@@ -81,19 +78,20 @@ defmodule Poker.Rank do
     lcards_order = lcards |> Enum.map(&Card.order/1)
     rcards_order = rcards |> Enum.map(&Card.order/1)
     cond do
-      lcards_order > rcards_order ->
-        {1, card_diff(lcards, rcards, :left)}
-      lcards_order == rcards_order  ->   {0, nil}
-      true              ->   {-1, card_diff(lcards, rcards, :right)}
+      lcards_order > rcards_order   -> :left
+      lcards_order == rcards_order  -> :tie
+      true                          -> :right
     end
+    |> card_diff(lcards, rcards)
   end
 
-  defp card_diff(l, r, select), do:
+  defp card_diff(select, l, r), do:
     l
     |> Enum.zip(r)
-    |> Enum.find(fn({l, r}) -> Card.order(l) != Card.order(r) end)
+    |> Enum.find({nil, nil}, fn({l, r}) -> Card.order(l) != Card.order(r) end)
     |> card(select)
 
-  defp card({l, _r}, :left),  do: l
-  defp card({_l, r}, :right), do: r
+  defp card({l, _r},  :left),  do: {:left, l}
+  defp card({_l, _r}, :tie),   do: {:tie, nil}
+  defp card({_l, r},  :right), do: {:right, r}
 end

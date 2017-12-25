@@ -15,6 +15,11 @@ defmodule Poker.CLITest do
               CLI.judge("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH")
   end
 
+  test "print_judgement - malformed" do
+    assert CLI.main_("foo bar") ==
+      "Malformed input: 'foo bar'; message: [\"foo bar\"]"
+  end
+
   test "print_judgement - white, high card: ace" do
     assert CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH") ==
       "White wins - high card: Ace"

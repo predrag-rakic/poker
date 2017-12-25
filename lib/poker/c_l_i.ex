@@ -9,12 +9,15 @@ defmodule Poker.CLI do
   def main_(string), do: string |> judge() |> output()
 
   def judge(input) when is_binary(input) do
-    [black_input, white_input] = split(input)
-    with  {:ok, black} <- Category.new(black_input),
+    with  [black_input, white_input] <- split(input),
+          {:ok, black} <- Category.new(black_input),
           {:ok, white} <- Category.new(white_input),
-          %Rank{} = rank <- Rank.compare(black, white),
-    do:
+          %Rank{} = rank <- Rank.compare(black, white)
+    do
       rank
+    else e ->
+      "Malformed input: '#{input}'; message: #{inspect e}"
+    end
   end
 
   def split(input) do
@@ -28,6 +31,7 @@ defmodule Poker.CLI do
     "Black wins - " <> result(category, card)
   defp output(%Rank{winner: :right, category: category, card: card}), do:
     "White wins - " <> result(category, card)
+  defp output(message), do: message
 
   defp result(category, card), do:
     "#{%Category{category: category, hand: ""}}" <> card_value(card)

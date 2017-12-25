@@ -17,23 +17,37 @@ defmodule Poker.RankTest do
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "C", card: card}
   end
 
+  test "compare - high card - left 2" do
+    assert {:ok, left}  = Category.new("6H KH 7S AC 9H")
+    assert {:ok, right} = Category.new("7S JD 8D AS TC")
+    assert {:ok, card}  = Card.new("KH")
+    assert  Rank.compare(left, right) == %Rank{winner: 1, category: "C", card: card}
+  end
+
   test "compare - pair - left, cat" do
     assert {:ok, left}  = Category.new("6H JH 6S AC 9H")
     assert {:ok, right} = Category.new("5S JD 7D AS 9C")
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "2", card: nil}
   end
 
-  test "compare - pair - right, card" do
+  test "compare - pair - right, card - pair" do
     assert {:ok, left}  = Category.new("6H KH 6S AC 9H")
     assert {:ok, right} = Category.new("7S JS 7S AS 9C")
     assert {:ok, card}  = Card.new("7S")
     assert  Rank.compare(left, right) == %Rank{winner: -1, category: "2", card: card}
   end
 
-  test "compare - pair - right, card 2" do
-    assert {:ok, left}  = Category.new("6H JH 6S AC 9H")
+  test "compare - pair - right, card - remaining cards first" do
+    assert {:ok, left}  = Category.new("6H JH 6S KC 9H")
     assert {:ok, right} = Category.new("6C QH 6D AS 9C")
-    assert {:ok, card}  = Card.new("QH")
+    assert {:ok, card}  = Card.new("AS")
+    assert  Rank.compare(left, right) == %Rank{winner: -1, category: "2", card: card}
+  end
+
+  test "compare - pair - right, card - remaining cards last" do
+    assert {:ok, left}  = Category.new("6H QD 6S AC 8H")
+    assert {:ok, right} = Category.new("6C QH 6D AS 9C")
+    assert {:ok, card}  = Card.new("9C")
     assert  Rank.compare(left, right) == %Rank{winner: -1, category: "2", card: card}
   end
 
@@ -43,14 +57,21 @@ defmodule Poker.RankTest do
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "P", card: nil}
   end
 
-  test "compare - two pairs - left, card" do
+  test "compare - two pairs - left, card - higher pair" do
     assert {:ok, left}  = Category.new("6H AH 6S AC TH")
     assert {:ok, right} = Category.new("7C KD 7D KS 9C")
     assert {:ok, card}  = Card.new("AH")
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "P", card: card}
   end
 
-  test "compare - two pairs - left, card 2" do
+  test "compare - two pairs - left, card - lower pair" do
+    assert {:ok, left}  = Category.new("7H AH 7S AC TH")
+    assert {:ok, right} = Category.new("6C AD 6D AS 9C")
+    assert {:ok, card}  = Card.new("7H")
+    assert  Rank.compare(left, right) == %Rank{winner: 1, category: "P", card: card}
+  end
+
+  test "compare - two pairs - left, card - remaining card" do
     assert {:ok, left}  = Category.new("6H AH 6S AC TH")
     assert {:ok, right} = Category.new("6C AD 6D AS 9C")
     assert {:ok, card}  = Card.new("TH")
@@ -83,17 +104,17 @@ defmodule Poker.RankTest do
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "S", card: card}
   end
 
-  test "compare - flush - left, card" do
+  test "compare - flush - left, card - highes" do
     assert {:ok, left}  = Category.new("6H TH 7H 3H 5H")
     assert {:ok, right} = Category.new("9C 2C 7C 3C 5C")
     assert {:ok, card}  = Card.new("TH")
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "F", card: card}
   end
 
-  test "compare - flush - left, card2" do
+  test "compare - flush - left, card - lowest" do
     assert {:ok, left}  = Category.new("9H TH 7H 3H 5H")
-    assert {:ok, right} = Category.new("9C TC 6C 3C 5C")
-    assert {:ok, card}  = Card.new("7H")
+    assert {:ok, right} = Category.new("9C TC 7C 2C 5C")
+    assert {:ok, card}  = Card.new("3H")
     assert  Rank.compare(left, right) == %Rank{winner: 1, category: "F", card: card}
   end
 

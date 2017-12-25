@@ -50,6 +50,11 @@ defmodule Poker.CategoryTest do
     assert {:ok, %Category{category: "C"}} = Category.new(high_card())
   end
 
+  test "get name" do
+    {:ok, strait_flush} = Category.new(strait_flush())
+    assert "#{strait_flush}" == "straight flush"
+  end
+
   defp strait_flush, do:      "5H 4H 7H 6H 8H"
   defp four_of_a_kind, do:    "5C 5D 5S 6H 5H"
   defp full_house, do:        "5C 5D 6S 6H 6C"

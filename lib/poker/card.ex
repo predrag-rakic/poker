@@ -3,6 +3,7 @@ defmodule Poker.Card do
   Single card from 52 cards deck
   """
 
+  @value_names  ~w(2 3 4 5 6 7 8 9 10 Jack Queen King Ace)
   @valid_values ~w(2 3 4 5 6 7 8 9 T J Q K A)
   @valid_suits  ~w(C D H S)
 
@@ -46,6 +47,8 @@ defmodule Poker.Card do
   def order(%__MODULE__{} = card), do:
     @valid_values |> Enum.find_index(fn(value) -> value == card.value end)
 
+  def get_name(%__MODULE__{} = card), do: Enum.at(@value_names, order(card))
+
   defp validate_value(value)  when value in @valid_values, do: {:ok, value}
   defp validate_value(value), do: {:error, {:invalid_value, value}}
 
@@ -56,5 +59,7 @@ end
 defimpl String.Chars, for: Poker.Card do
   @moduledoc "Print card in required format"
 
-  def to_string(card), do: "#{card.value}#{card.suit}"
+  alias Poker.Card
+
+  def to_string(card), do: "#{Card.get_name(card)}"
 end

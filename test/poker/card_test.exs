@@ -62,6 +62,6 @@ defmodule Poker.CardTest do
 
   test "struct to_string conversion" do
     {:ok, l} = Card.new("AS")
-    assert "AS" = to_string(l)
+    assert "Ace" = to_string(l)
   end
 end

@@ -10,24 +10,27 @@ defmodule Poker.CLITest do
   end
 
   test "judge" do
-    assert {:ok, card}  = Card.new("7S")
-    assert %Rank{winner: -1, category: "C", card: card} =
+    assert {:ok, card}  = Card.new("AH")
+    assert %Rank{winner: -1, category: "C", card: ^card} =
               CLI.judge("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH")
   end
 
   test "print_judgement - white, high card: ace" do
-    CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH")
+    assert CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C AH") ==
+      "White wins - high card: Ace"
   end
 
   test "print_judgement - white, flush" do
-    CLI.main_("Black: 2H 4S 4C 3D 4H White: 2S 8S AS QS 3S")
+    assert CLI.main_("Black: 2H 4S 4C 3D 4H White: 2S 8S AS QS 3S") ==
+      "White wins - flush"
   end
 
   test "print_judgement - black, high card: 9" do
-    CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C KH")
+    assert CLI.main_("Black: 2H 3D 5S 9C KD White: 2C 3H 4S 8C KH") ==
+      "Black wins - high card: 9"
   end
 
   test "print_judgement - tie " do
-    CLI.main_("Black: 2H 3D 5S 9C KD White: 2D 3H 5C 9S KH")
+    assert CLI.main_("Black: 2H 3D 5S 9C KD White: 2D 3H 5C 9S KH") == "Tie"
   end
 end

@@ -6,8 +6,10 @@ defmodule Poker.Category do
   alias Poker.Hand
   alias Poker.SameValueCards, as: SVC
 
-  # Categories: Straight Flush, Four of a kind, Full House, Flush,
-  #             Straight, Three of a Kind, Two Pairs, Pair, High Card
+  @category_names [
+    "straight flush", "four of a kind", "full house", "flush",
+    "straight", "three of a kind", "two pairs", "pair", "high card"
+  ]
   @valid_categories ~w(T 4 H F S 3 P 2 C)
 
   @enforce_keys [:category, :hand]
@@ -48,6 +50,9 @@ defmodule Poker.Category do
     @valid_categories
     |> Enum.reverse()
     |> Enum.find_index(fn(v) -> v == category.category end)
+
+  def get_name(%__MODULE__{} = category), do:
+    @category_names |> Enum.reverse() |> Enum.at(order(category))
 
   defp categorize([args | tail], hand) do
     hand |> by(args) |> category_response(tail, hand)
@@ -99,4 +104,12 @@ defmodule Poker.Category do
   defp rank_response(hand, category), do:
     # struct!(__MODULE__, category: category, hand: hand)
     new(category, hand) |> elem(1)
+end
+
+defimpl String.Chars, for: Poker.Category do
+  @moduledoc "Print Category in required format"
+
+  alias Poker.Category
+
+  def to_string(category), do: "#{Category.get_name(category)}"
 end

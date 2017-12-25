@@ -1,4 +1,4 @@
-.PHONY: all build test
+.PHONY: all build test credo
 
 all: build
 
@@ -8,3 +8,6 @@ build:
 
 test:
 	mix test
+
+credo:
+	mix credo

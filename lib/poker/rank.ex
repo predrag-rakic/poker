@@ -54,12 +54,16 @@ defmodule Poker.Rank do
     [card]
   end
   def get_cards("P", hand) do
-    {[[c1,_], [c2, _]], [[c3]]} = SVC.find(hand, 2)
+    {[[c1, _], [c2, _]], [[c3]]} = SVC.find(hand, 2)
     [c1, c2] |> Card.sort() |> Enum.reverse() |> List.insert_at(-1, c3)
   end
   def get_cards("2", hand) do
-    {[[c1,_]], remaining} = SVC.find(hand, 2)
-    remaining |> List.flatten() |> Card.sort() |> Enum.reverse() |> List.insert_at(0, c1)
+    {[[c1, _]], remaining} = SVC.find(hand, 2)
+    remaining
+    |> List.flatten()
+    |> Card.sort()
+    |> Enum.reverse()
+    |> List.insert_at(0, c1)
   end
   def get_cards("C", hand), do: hc_rules(hand)
 
@@ -85,7 +89,8 @@ defmodule Poker.Rank do
   end
 
   defp card_diff(l, r, select), do:
-    Enum.zip(l, r)
+    l
+    |> Enum.zip(r)
     |> Enum.find(fn({l, r}) -> Card.order(l) != Card.order(r) end)
     |> card(select)
 

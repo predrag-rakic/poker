@@ -22,7 +22,7 @@ defmodule Poker.Hand do
   def new(cards) when is_binary(cards) do
     cards
     |> String.split()
-    |> Enum.map(fn(c) -> Card.new(c) |> elem(1) end)
+    |> Enum.map(fn(c) -> c |> Card.new() |> elem(1) end)
     |> new()
   end
 
@@ -84,13 +84,13 @@ defmodule Poker.Hand do
     |> Enum.reduce(&consequtive_integers?/2)
 
   defp consequtive_integers?(_, nil), do: nil
-  defp consequtive_integers?(x, acc) when acc+1 == x, do: x
+  defp consequtive_integers?(x, acc) when acc + 1 == x, do: x
   defp consequtive_integers?(_, _), do: nil
 
   defp create_hand!(cards), do: struct!(__MODULE__, cards: cards)
 
   defp validate_cards(cards), do:
-    Enum.all?(cards, &Card.is_card(&1)) |> validate_cards_(cards)
+    cards |> Enum.all?(&Card.is_card(&1)) |> validate_cards_(cards)
 
   defp validate_cards_(true,  cards), do: {:ok, cards}
   defp validate_cards_(false, cards), do: {:error, {:invalid, cards}}

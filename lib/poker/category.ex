@@ -20,16 +20,16 @@ defmodule Poker.Category do
     #       consequtive?,
     #               same_value,
     #                      group_count,
-    #                             category,
-    {true,  true,   nil,   nil,   "T"},       # Straight Flush
-    {nil,   nil,    4,     1,     "4"},       # Four of a kind
-    {nil,   nil,    {3,2}, {1,1}, "H"},       # Full House
-    {true,  false,  nil,   nil,   "F"},       # Flush
-    {false, true,   nil,   nil,   "S"},       # Straight
-    {nil,   nil,    3,     1,     "3"},       # Three of a kind
-    {nil,   nil,    2,     2,     "P"},       # Two pairs
-    {nil,   nil,    2,     1,     "2"},       # Pair
-    {nil,   nil,    1,     5,     "C"},       # High Card
+    #                              category,
+    {true,  true,   nil,    nil,    "T"},       # Straight Flush
+    {nil,   nil,    4,      1,      "4"},       # Four of a kind
+    {nil,   nil,    {3, 2}, {1, 1}, "H"},       # Full House
+    {true,  false,  nil,    nil,    "F"},       # Flush
+    {false, true,   nil,    nil,    "S"},       # Straight
+    {nil,   nil,    3,      1,      "3"},       # Three of a kind
+    {nil,   nil,    2,      2,      "P"},       # Two pairs
+    {nil,   nil,    2,      1,      "2"},       # Pair
+    {nil,   nil,    1,      5,      "C"},       # High Card
   ]
 
   def new(category, %Hand{} = hand) do
@@ -82,7 +82,8 @@ defmodule Poker.Category do
   end
 
   defp by(%Hand{} = hand, {nil, nil, same_value, group_count, category}) do
-    SVC.find(hand, same_value)
+    hand
+    |> SVC.find(same_value)
     |> case do
       # Two pairs
       {pairs, _} when group_count == 2 and length(pairs) == 2 ->
@@ -102,8 +103,7 @@ defmodule Poker.Category do
   defp category_response(resp, _tail, _hand), do: resp
 
   defp rank_response(hand, category), do:
-    # struct!(__MODULE__, category: category, hand: hand)
-    new(category, hand) |> elem(1)
+    category |> new(hand) |> elem(1)
 end
 
 defimpl String.Chars, for: Poker.Category do
